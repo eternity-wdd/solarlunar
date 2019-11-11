@@ -132,7 +132,7 @@ func SolarToMonthDay(date string) string {
 		result += "闰"
 	}
 	result += CHINESENUMBERSPECIAL[lunarMonth-1] + "月"
-	result += chineseDayString(lunarDay) + "日"
+	result += chineseDayString(lunarDay)
 	return result
 }
 func SolarToSimpleLuanr(date string) string {
