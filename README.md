@@ -22,6 +22,8 @@ func main() {
 	solarDate := "1990-05-06"
 	fmt.Println(solarlunar.SolarToChineseLuanr(solarDate))
 	fmt.Println(solarlunar.SolarToSimpleLuanr(solarDate))
+	// 计算当天的农历日期
+	calendar = solarlunar.SolarToMonthDay(solarDate)
 	
 	lunarDate := "1990-04-12"
 	fmt.Println(solarlunar.LunarToSolar(lunarDate, false))
