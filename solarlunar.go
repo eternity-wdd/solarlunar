@@ -1,4 +1,4 @@
-package solarlunar
+package calendar
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 )
 
 var MIN_YEAR = 1900
-var MAX_YEAR = 2049
+var MAX_YEAR = 2099
 
 var DATELAYOUT = "2006-01-02"
 var STARTDATESTR = "1900-01-30"
@@ -32,7 +32,13 @@ var LUNAR_INFO = []int{
 	0x0a950, 0x0b4a0, 0x0baa4, 0x0ad50, 0x055d9, 0x04ba0, 0x0a5b0, 0x15176, 0x052b0, 0x0a930,
 	0x07954, 0x06aa0, 0x0ad50, 0x05b52, 0x04b60, 0x0a6e6, 0x0a4e0, 0x0d260, 0x0ea65, 0x0d530,
 	0x05aa0, 0x076a3, 0x096d0, 0x04bd7, 0x04ad0, 0x0a4d0, 0x1d0b6, 0x0d250, 0x0d520, 0x0dd45,
-	0x0b5a0, 0x056d0, 0x055b2, 0x049b0, 0x0a577, 0x0a4b0, 0x0aa50, 0x1b255, 0x06d20, 0x0ada0}
+	0x0b5a0, 0x056d0, 0x055b2, 0x049b0, 0x0a577, 0x0a4b0, 0x0aa50, 0x1b255, 0x06d20, 0x0ada0,
+	0x14b63, 0x09370, 0x049f8, 0x04970, 0x064b0, 0x168a6, 0x0ea50, 0x06b20, 0x1a6c4, 0x0aae0, //2050-2059
+	0x0a2e0, 0x0d2e3, 0x0c960, 0x0d557, 0x0d4a0, 0x0da50, 0x05d55, 0x056a0, 0x0a6d0, 0x055d4, //2060-2069
+	0x052d0, 0x0a9b8, 0x0a950, 0x0b4a0, 0x0b6a6, 0x0ad50, 0x055a0, 0x0aba4, 0x0a5b0, 0x052b0, //2070-2079
+	0x0b273, 0x06930, 0x07337, 0x06aa0, 0x0ad50, 0x14b55, 0x04b60, 0x0a570, 0x054e4, 0x0d160, //2080-2089
+	0x0e968, 0x0d520, 0x0daa0, 0x16aa6, 0x056d0, 0x04ae0, 0x0a9d4, 0x0a2d0, 0x0d150, 0x0f252, //2090-2099
+	0x0d520}
 
 func LunarToSolar(date string, leapMonthFlag bool) string {
 	loc, _ := time.LoadLocation("Local")
@@ -118,6 +124,17 @@ func SolarToChineseLuanr(date string) string {
 	return result
 }
 
+// 返回农历日期，形如：九月初八
+func ToMonthDay(date string) string {
+	_, lunarMonth, lunarDay, leapMonth, leapMonthFlag := calculateLunar(date)
+	result := ""
+	if leapMonthFlag && (lunarMonth == leapMonth) {
+		result += "闰"
+	}
+	result += CHINESENUMBERSPECIAL[lunarMonth-1] + "月"
+	result += chineseDayString(lunarDay) + "日"
+	return result
+}
 func SolarToSimpleLuanr(date string) string {
 	lunarYear, lunarMonth, lunarDay, leapMonth, leapMonthFlag := calculateLunar(date)
 	result := strconv.Itoa(lunarYear) + "年"
@@ -137,7 +154,7 @@ func SolarToSimpleLuanr(date string) string {
 	return result
 }
 
-func SolarToLuanr(date string) (string,bool) {
+func SolarToLuanr(date string) (string, bool) {
 	lunarYear, lunarMonth, lunarDay, leapMonth, leapMonthFlag := calculateLunar(date)
 	result := strconv.Itoa(lunarYear) + "-"
 	if lunarMonth < 10 {
@@ -152,12 +169,11 @@ func SolarToLuanr(date string) (string,bool) {
 	}
 
 	if leapMonthFlag && (lunarMonth == leapMonth) {
-		return result,true
+		return result, true
 	} else {
-		return result,false
+		return result, false
 	}
 }
-
 
 func calculateLunar(date string) (lunarYear, lunarMonth, lunarDay, leapMonth int, leapMonthFlag bool) {
 	loc, _ := time.LoadLocation("Local")
