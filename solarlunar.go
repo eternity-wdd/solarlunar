@@ -125,7 +125,7 @@ func SolarToChineseLuanr(date string) string {
 }
 
 // 返回农历日期，形如：九月初八
-func ToMonthDay(date string) string {
+func SolarToMonthDay(date string) string {
 	_, lunarMonth, lunarDay, leapMonth, leapMonthFlag := calculateLunar(date)
 	result := ""
 	if leapMonthFlag && (lunarMonth == leapMonth) {
